@@ -1,0 +1,3 @@
+# Project exclude paths
+/brains-chat (sample)/client/target/
+/brains-chat (sample)/server/target/
