@@ -29,6 +29,7 @@ public class ClientHandler {
                         // /auth login1 pass1
                         if (msg.startsWith("/auth ")) {
                             String[] tokens = msg.split("\\s");
+                            //System.out.println(tokens[1]+" "+tokens[2]);
                             String nick = server.getAuthService().getNicknameByLoginAndPassword(tokens[1], tokens[2]);
                             if (nick != null && !server.isNickBusy(nick)) {
                                 sendMsg("/authok " + nick);

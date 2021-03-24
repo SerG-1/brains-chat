@@ -1,9 +1,16 @@
 package com.geekbrains.server;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 public class SimpleAuthService implements AuthService {
+    public static DB db = new DB();
+
+
+
+
+/*public class SimpleAuthService implements AuthService {
     private class UserData {
         private String login;
         private String password;
@@ -25,15 +32,34 @@ public class SimpleAuthService implements AuthService {
             // login2, pass2
             users.add(new UserData("login" + i, "pass" + i, "nick" + i));
         }
-    }
+    }*/
 
     @Override
     public String getNicknameByLoginAndPassword(String login, String password) {
-        for (UserData o : users) {
+
+
+        String sql = "SELECT login,password,nickname FROM new_table";
+
+        {
+            try {
+                ResultSet rs = db.runSql(sql);
+                while (rs.next()) {
+                    if (rs.getString("login").equals(login) && rs.getString("password").equals(password)) {
+                        System.out.println(rs.getString("login") + "  " + rs.getString("password") + "  " + rs.getString("nickname"));
+                        return rs.getString("nickname");
+                    }
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+
+      /*  for (UserData o : users) {
             if (o.login.equals(login) && o.password.equals(password)) {
                 return o.nickname;
             }
+        }*/
+            return null;
         }
-        return null;
     }
 }
