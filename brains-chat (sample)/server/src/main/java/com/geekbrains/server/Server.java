@@ -16,7 +16,7 @@ public class Server {
     public Server() {
         clients = new Vector<>();
         authService = new SimpleAuthService();
-        try (ServerSocket serverSocket = new ServerSocket(8189)) {
+        try (ServerSocket serverSocket = new ServerSocket(8190)) {
             System.out.println("Сервер запущен на порту 8189");
             while (true) {
                 Socket socket = serverSocket.accept();

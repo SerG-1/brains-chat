@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -86,6 +87,10 @@ public class Controller implements Initializable {
         });
 
         Network.setCallOnMsgReceived(args -> {
+           /* FileInputStream inputer = new FileInputStream("D:\\G\\demo.txt");
+          }*/
+
+
             String msg = args[0].toString();
             if (msg.startsWith("/")) {
                 if (msg.startsWith("/clients ")) {
@@ -98,7 +103,17 @@ public class Controller implements Initializable {
                     });
                 }
             } else {
-                textArea.appendText(msg + "\n");
+
+
+
+
+                String data = msg+"\n";
+                FileOutputStream outer = new FileOutputStream("D:\\G\\demo.txt",true);
+                outer.write(data.getBytes());
+                outer.close();
+
+                textArea.appendText(msg+"\n");
+
             }
         });
     }

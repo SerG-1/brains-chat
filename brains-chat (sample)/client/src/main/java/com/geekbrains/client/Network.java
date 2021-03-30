@@ -2,6 +2,7 @@ package com.geekbrains.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -52,17 +53,35 @@ public class Network {
 
     public static void connect() {
         try {
-            socket = new Socket("localhost", 8189);
+            String[] text =null;
+            socket = new Socket("localhost", 8190);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+
             Thread clientListenerThread = new Thread(() -> {
                 try {
+                    FileInputStream inputer = new FileInputStream("D:\\G\\demo.txt");
+                    int i;
+                    char[]fulltext;
+
+                    while((i=inputer.read())!= -1){
+                    //fulltext[i]=(char)i;
+                        callOnMsgReceived.callback((char)i);
+                    }
+                    //System.out.println(fulltext);
+                       // callOnMsgReceived.callback(inputer.read());
+                        //System.out.print((char)i);
+
+inputer.close();
+
                     while (true) {
                         String msg = in.readUTF();
                         if (msg.startsWith("/authok ")) {
                             callOnAuthenticated.callback(msg.split("\\s")[1]);
                             break;
                         }
+
+
                     }
                     while (true) {
                         String msg = in.readUTF();
@@ -72,9 +91,17 @@ public class Network {
                         callOnMsgReceived.callback(msg);
                     }
                 } catch (IOException e) {
-                    callOnException.callback("Соединение с сервером разорвано");
+                    try {
+                        callOnException.callback("Соединение с сервером разорвано");
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 } finally {
-                    closeConnection();
+                    try {
+                        closeConnection();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             clientListenerThread.setDaemon(true);
@@ -94,7 +121,7 @@ public class Network {
         }
     }
 
-    public static void closeConnection() {
+    public static void closeConnection() throws IOException {
         callOnCloseConnection.callback();
         try {
             in.close();
